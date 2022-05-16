@@ -1,0 +1,98 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            d6:2f:53:35:da:4a:60:3c:2f:9f:bd:81:e7:47:5e:f4
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=TW, ST=Taiwan, L=Taipei, O=4n0nym0u5 4u7h3n71c4710n, OU=Root CA, CN=4n0nym0u5-4u7h3n71c4710n.csie.ntu.edu.tw/emailAddress=4n0nym0u5-4u7h3n71c4710n@csie.ntu.edu.tw
+        Validity
+            Not Before: May 16 17:30:50 2022 GMT
+            Not After : Aug 18 17:30:50 2024 GMT
+        Subject: C=TW, ST=Taiwan, L=Taipei, O=4n0nym0u5 4u7h3n71c4710n, OU=Authenticator, CN=authenticator/emailAddress=4n0nym0u5-4u7h3n71c4710n@csie.ntu.edu.tw
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:ef:58:6d:15:d4:f4:1f:39:54:60:94:bc:da:5e:
+                    fa:0d:37:1f:76:c4:f8:48:a5:33:32:04:05:77:de:
+                    83:50:11:33:b2:5c:7f:13:e2:a0:5d:8b:8a:23:32:
+                    27:fb:62:0c:5f:59:4f:86:aa:ae:3f:ff:14:32:3d:
+                    62:39:df:35:fe:1a:e7:95:be:12:c1:09:05:fa:b1:
+                    6e:78:0d:4f:e8:12:a0:8a:7d:63:c3:51:99:22:13:
+                    02:2f:75:bd:ac:73:48:30:da:eb:70:ff:46:2c:be:
+                    71:bb:8d:cf:4a:0e:05:e2:fa:e3:ed:72:6a:37:e9:
+                    8d:6d:fb:6e:34:a7:f6:d6:1c:f9:c3:06:18:c2:fb:
+                    ef:50:c1:57:46:6d:ac:b7:28:5a:8e:65:60:f0:a3:
+                    9a:da:61:fd:d8:12:0d:a9:b1:64:1d:fd:d9:95:da:
+                    9f:66:b2:dd:2d:bf:c4:6a:85:d2:cc:75:75:e8:5d:
+                    35:e4:89:f2:61:4c:53:66:e8:e6:13:4a:62:b8:ff:
+                    3c:30:f6:43:24:dc:83:83:f6:b5:5a:23:39:e4:9c:
+                    b2:8b:38:85:9c:c7:b3:ae:ec:f7:56:71:13:b6:77:
+                    f7:2c:b4:15:f2:5e:82:27:8d:7d:a5:32:ec:60:08:
+                    db:87:ce:53:ec:a7:3b:99:fa:49:19:64:06:3a:82:
+                    fb:9d
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Key Identifier: 
+                69:31:EE:3E:D9:D8:BF:89:B8:C1:F5:A2:E5:E8:71:80:AF:BA:C3:E0
+            X509v3 Authority Key Identifier: 
+                keyid:6F:46:E5:1E:A6:26:A5:79:12:1F:A1:DF:1C:84:34:E9:64:7F:D6:E4
+                DirName:/C=TW/ST=Taiwan/L=Taipei/O=4n0nym0u5 4u7h3n71c4710n/OU=Root CA/CN=4n0nym0u5-4u7h3n71c4710n.csie.ntu.edu.tw/emailAddress=4n0nym0u5-4u7h3n71c4710n@csie.ntu.edu.tw
+                serial:EE:D4:F3:D0:16:E1:25:2C
+
+            X509v3 Extended Key Usage: 
+                TLS Web Server Authentication
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment
+            X509v3 Subject Alternative Name: 
+                DNS:authenticator
+    Signature Algorithm: sha256WithRSAEncryption
+         07:97:3f:04:20:ce:f1:93:e2:fd:92:71:c9:5e:79:57:28:0a:
+         99:1e:5d:df:95:84:af:ad:8f:18:5f:d0:85:f3:ec:06:3c:ae:
+         09:4d:cf:06:fe:55:81:9b:a3:61:62:ce:b3:3d:fd:69:eb:05:
+         d3:ac:e4:59:c9:31:56:24:0b:96:7f:ee:b1:cc:d8:7e:c2:0a:
+         63:b0:7b:36:d3:b5:aa:26:32:5b:50:48:a7:df:8f:ac:6a:47:
+         99:7c:57:be:3a:70:44:4b:c6:29:8c:2f:e4:d5:44:2f:6c:51:
+         0f:3c:6a:1d:33:eb:05:21:08:d1:30:3c:eb:d0:fb:3e:85:3e:
+         c9:a6:82:2e:cd:f8:58:cf:7b:5d:10:78:7f:9f:98:f8:06:10:
+         76:c0:53:2c:d6:44:3c:b3:a7:6a:ec:d4:b4:d7:71:08:dd:31:
+         f0:3c:0e:54:7c:d4:2f:d3:7f:91:73:0e:01:c8:f6:58:9a:5b:
+         7d:e5:c1:34:83:af:c0:35:f3:23:5d:46:6a:ce:f8:1c:f1:b0:
+         cc:a6:6d:c2:ac:88:a4:53:7b:4e:8f:5e:2c:ef:ef:7f:52:a4:
+         79:2f:ea:ec:e9:32:f9:ec:7e:0e:32:59:99:cf:e0:c9:00:25:
+         8b:88:01:1c:ab:a0:d1:0c:50:d9:16:db:fd:03:eb:65:4e:2d:
+         33:f0:15:3c
+-----BEGIN CERTIFICATE-----
+MIIFjTCCBHWgAwIBAgIRANYvUzXaSmA8L5+9gedHXvQwDQYJKoZIhvcNAQELBQAw
+gdAxCzAJBgNVBAYTAlRXMQ8wDQYDVQQIDAZUYWl3YW4xDzANBgNVBAcMBlRhaXBl
+aTEhMB8GA1UECgwYNG4wbnltMHU1IDR1N2gzbjcxYzQ3MTBuMRAwDgYDVQQLDAdS
+b290IENBMTEwLwYDVQQDDCg0bjBueW0wdTUtNHU3aDNuNzFjNDcxMG4uY3NpZS5u
+dHUuZWR1LnR3MTcwNQYJKoZIhvcNAQkBFig0bjBueW0wdTUtNHU3aDNuNzFjNDcx
+MG5AY3NpZS5udHUuZWR1LnR3MB4XDTIyMDUxNjE3MzA1MFoXDTI0MDgxODE3MzA1
+MFowgbsxCzAJBgNVBAYTAlRXMQ8wDQYDVQQIDAZUYWl3YW4xDzANBgNVBAcMBlRh
+aXBlaTEhMB8GA1UECgwYNG4wbnltMHU1IDR1N2gzbjcxYzQ3MTBuMRYwFAYDVQQL
+DA1BdXRoZW50aWNhdG9yMRYwFAYDVQQDDA1hdXRoZW50aWNhdG9yMTcwNQYJKoZI
+hvcNAQkBFig0bjBueW0wdTUtNHU3aDNuNzFjNDcxMG5AY3NpZS5udHUuZWR1LnR3
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA71htFdT0HzlUYJS82l76
+DTcfdsT4SKUzMgQFd96DUBEzslx/E+KgXYuKIzIn+2IMX1lPhqquP/8UMj1iOd81
+/hrnlb4SwQkF+rFueA1P6BKgin1jw1GZIhMCL3W9rHNIMNrrcP9GLL5xu43PSg4F
+4vrj7XJqN+mNbftuNKf21hz5wwYYwvvvUMFXRm2styhajmVg8KOa2mH92BINqbFk
+Hf3ZldqfZrLdLb/EaoXSzHV16F015InyYUxTZujmE0piuP88MPZDJNyDg/a1WiM5
+5JyyiziFnMezruz3VnETtnf3LLQV8l6CJ419pTLsYAjbh85T7Kc7mfpJGWQGOoL7
+nQIDAQABo4IBczCCAW8wCQYDVR0TBAIwADAdBgNVHQ4EFgQUaTHuPtnYv4m4wfWi
+5ehxgK+6w+AwggEFBgNVHSMEgf0wgfqAFG9G5R6mJqV5Eh+h3xyENOlkf9bkoYHW
+pIHTMIHQMQswCQYDVQQGEwJUVzEPMA0GA1UECAwGVGFpd2FuMQ8wDQYDVQQHDAZU
+YWlwZWkxITAfBgNVBAoMGDRuMG55bTB1NSA0dTdoM243MWM0NzEwbjEQMA4GA1UE
+CwwHUm9vdCBDQTExMC8GA1UEAwwoNG4wbnltMHU1LTR1N2gzbjcxYzQ3MTBuLmNz
+aWUubnR1LmVkdS50dzE3MDUGCSqGSIb3DQEJARYoNG4wbnltMHU1LTR1N2gzbjcx
+YzQ3MTBuQGNzaWUubnR1LmVkdS50d4IJAO7U89AW4SUsMBMGA1UdJQQMMAoGCCsG
+AQUFBwMBMAsGA1UdDwQEAwIFoDAYBgNVHREEETAPgg1hdXRoZW50aWNhdG9yMA0G
+CSqGSIb3DQEBCwUAA4IBAQAHlz8EIM7xk+L9knHJXnlXKAqZHl3flYSvrY8YX9CF
+8+wGPK4JTc8G/lWBm6NhYs6zPf1p6wXTrORZyTFWJAuWf+6xzNh+wgpjsHs207Wq
+JjJbUEin34+sakeZfFe+OnBES8YpjC/k1UQvbFEPPGodM+sFIQjRMDzr0Ps+hT7J
+poIuzfhYz3tdEHh/n5j4BhB2wFMs1kQ8s6dq7NS013EI3THwPA5UfNQv03+Rcw4B
+yPZYmlt95cE0g6/ANfMjXUZqzvgc8bDMpm3CrIikU3tOj14s7+9/UqR5L+rs6TL5
+7H4OMlmZz+DJACWLiAEcq6DRDFDZFtv9A+tlTi0z8BU8
+-----END CERTIFICATE-----
