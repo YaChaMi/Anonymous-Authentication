@@ -212,7 +212,6 @@ def main():
                         attempt_failure(sck,'You have used a token')
                     else:
                         global_data.requests[token]['user'] = sck
-                        random.seed(0) # Test Use
                         m = random.getrandbits(32)
                         global_data.sockets[sck]['token'] = token
                         global_data.sockets[sck]['challenge'] = m
