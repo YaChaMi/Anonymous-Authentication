@@ -47,7 +47,7 @@ def interval_check(num,low,up):
 
 # Generate challenges
 def challenge_generation(m,group,prefix):
-    pk_list = key_database.get_pubkeys(group)
+    pk_list = key_database.get_pubkeys(group,prefix)
     chal_list = []
     for element in pk_list:
         uid, pk = element['userid'], RSA.import_key(element['pubkey']) 
@@ -61,8 +61,8 @@ def challenge_generation(m,group,prefix):
 def socket_disconnect(sck,msg):
 
     inform = global_data.sockets[sck]
-    if inform.get('role') == 'server':
-        for token in inform.get('token'):
+    if inform.get('role') == 'server' and dict_check(inform,'token'):
+        for token in inform['token']:
             if dict_check(global_data.requests[token],'user'):
                 socket_disconnect(global_data.requests[token]['user'],msg)
             del global_data.requests[token]    
@@ -182,7 +182,8 @@ def main():
                         warn_send(sck,'Token is used by other servers')
                         continue
                     try:
-                        key_database.get_pubkeys(recv_data['group'])
+                        if not key_database.get_pubkeys(recv_data['group'],recv_data['prefix']):
+                            raise
                     except:
                         warn_send(sck,'Group is inexistent')
                         continue
