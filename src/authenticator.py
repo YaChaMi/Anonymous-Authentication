@@ -59,7 +59,6 @@ def challenge_generation(m,group,prefix):
 
 # Disconnect socket
 def socket_disconnect(sck,msg):
-
     inform = global_data.sockets[sck]
     if inform.get('role') == 'server' and dict_check(inform,'token'):
         for token in inform['token']:
@@ -68,7 +67,6 @@ def socket_disconnect(sck,msg):
             del global_data.requests[token]    
     elif inform.get('role') == 'user' and dict_check(inform,'token'):
         del global_data.requests[inform['token']]['user']
-
     print(f"[{global_data.sockets[sck]['addr']}] disconnect : {msg}")
     global_data.socket_list.remove(sck)
     del global_data.sockets[sck]
@@ -78,11 +76,16 @@ def socket_disconnect(sck,msg):
 def check_send(sck,str):
     try:
         sck.send(str)
-        print(f"[{global_data.sockets[sck]['addr']}] send : {str.decode()}")
+        print(f"[{global_data.sockets[sck]['addr']}] send : {str}")
         return True
     except socket.error:
         socket_disconnect(sck,'Connection is closed by another side')
         return False
+
+# Send a warning message with token
+def warn_token_send(sck,msg,token):
+    send_data = json.dumps({'role': 'authenticator', 'msg': msg, 'token': token})
+    check_send(sck,send_data.encode(encoding="utf-8"))
 
 # Send a warning message
 def warn_send(sck,msg):
@@ -105,10 +108,12 @@ def format_check(sck,data):
         else:
             warn_send(sck,'Format is invalid')
         return None
-
     attribute = sorted(list(data.keys()))
     if attribute == sorted(['role','token','group','prefix']):
-        if data['role'] == 'server' and interval_check(data['group'],0,2**32-1) and interval_check(data['prefix'],0,32):
+        if not sck.getpeercert():
+            warn_send(sck,'Role is fake')
+            return None
+        elif data['role'] == 'server' and interval_check(data['group'],0,2**32-1) and interval_check(data['prefix'],0,32):
             try:
                 int(data['token'], 16)
                 return data
@@ -135,14 +140,15 @@ def attempt_failure(sck,msg):
     return
 
 def main():
-
     # Build listening socket
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.verify_mode = ssl.CERT_OPTIONAL
+    context.load_verify_locations('../certs/ca.crt')
     context.load_cert_chain('../certs/authenticator.crt', '../certs/authenticator.key')
     auth_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     auth_socket.setblocking(False)
     auth_socket.bind((auth_ip,auth_port))
-    auth_socket.listen(20)
+    auth_socket.listen(5)
     auth_socket = context.wrap_socket(auth_socket, server_side=True)
     global_data.socket_list.append(auth_socket)
     print(f"[Authenticator] : Listening on {auth_ip}:{auth_port}")
@@ -177,20 +183,20 @@ def main():
                 print(f"[{global_data.sockets[sck]['addr']}] recv : {recv_data}")
 
                 # 2. Server sends h(r) to Authenticator
-                if recv_data['role'] == 'server' and dict_check(recv_data,'token') and dict_check(recv_data,'group') and dict_check(recv_data,'prefix'):
+                if sck.getpeercert() and recv_data['role'] == 'server' and dict_check(recv_data,'token') and dict_check(recv_data,'group') and dict_check(recv_data,'prefix'):
                     if dict_check(global_data.requests,recv_data['token']):
-                        warn_send(sck,'Token is used by other servers')
+                        warn_token_send(sck,'Token is used by other servers',recv_data['token'])
                         continue
                     try:
                         if not key_database.get_pubkeys(recv_data['group'],recv_data['prefix']):
                             raise
                     except:
-                        warn_send(sck,'Group is inexistent')
+                        warn_token_send(sck,'Group is inexistent',recv_data['token'])
                         continue
                     if not dict_check(global_data.sockets[sck],'token'):
                         global_data.sockets[sck]['token'] = []
                     if len(global_data.sockets[sck]['token']) >= threshold.token_num:
-                        warn_send(sck,'Reach token limit')
+                        warn_token_send(sck,'Reach token limit',recv_data['token'])
                     else:
                         global_data.sockets[sck]['token'].append(recv_data['token'])
                         global_data.requests[recv_data['token']] = {'server': sck,'time': time.time(),'group': recv_data['group'],'prefix': recv_data['prefix']}
