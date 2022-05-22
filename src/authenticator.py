@@ -53,7 +53,8 @@ def challenge_generation(m,group,prefix):
         uid, pk = element['userid'], RSA.import_key(element['pubkey']) 
         rc = random.getrandbits(32)
         p = json.dumps({'m': m, 'rc': rc}).encode(encoding="utf-8")
-        c = PKCS1_v1_5.new(pk.publickey()).encrypt(p)
+        random.seed(rc)
+        c = PKCS1_v1_5.new(pk.publickey(), randfunc=random.randbytes).encrypt(p)
         chal_list.append({'userid': uid, 'ciphertext': c.hex(), 'random_coin': rc})
     return chal_list
 
@@ -147,6 +148,7 @@ def main():
     context.load_cert_chain('../certs/authenticator.crt', '../certs/authenticator.key')
     auth_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     auth_socket.setblocking(False)
+    auth_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     auth_socket.bind((auth_ip,auth_port))
     auth_socket.listen(5)
     auth_socket = context.wrap_socket(auth_socket, server_side=True)

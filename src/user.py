@@ -1,6 +1,7 @@
 import argparse
 import json
 import random
+import ssl
 from hashlib import sha3_256
 
 import pwn
@@ -41,7 +42,7 @@ def main():
     pwn.context(log_level="debug")
 
     # connect to server
-    sock_svr = pwn.remote(SERVER_HOST, SERVER_PORT)
+    sock_svr = pwn.remote(SERVER_HOST, SERVER_PORT, ssl=True)
     nonce = random.getrandbits(32)
     sock_svr.send(
         json.dumps(
@@ -56,7 +57,11 @@ def main():
     )
 
     ### begin debug only section
-    # sock_fake_svr = pwn.remote(AUTHENTICATOR_HOST, AUTHENTICATOR_PORT, ssl=True)
+    # ctx_fake_svr = ssl.create_default_context()
+    # ctx_fake_svr.check_hostname = False
+    # ctx_fake_svr.load_verify_locations('../certs/ca.crt')
+    # ctx_fake_svr.load_cert_chain('../certs/server-client.crt', '../certs/server-client.key')
+    # sock_fake_svr = pwn.remote(AUTHENTICATOR_HOST, AUTHENTICATOR_PORT, ssl=True, ssl_context=ctx_fake_svr)
     # sock_fake_svr.send(
     #     json.dumps(
     #         {
@@ -121,15 +126,12 @@ def main():
                 cheating = True
                 break
 
+            random.seed(chal['random_coin'])
             expected_ciphertext = (
-                PKCS1_v1_5.new(pk)
+                PKCS1_v1_5.new(pk, randfunc=random.randbytes)
                 .encrypt(json.dumps({"m": answer, "rc": chal["random_coin"]}).encode())
                 .hex()
             )
-            print("userid", userid)
-            print("expected", expected_ciphertext)
-            print("auth gives", chal["ciphertext"])
-            print()
             if expected_ciphertext != chal["ciphertext"]:
                 cheating = True
                 break
