@@ -6,12 +6,12 @@ import json
 import ssl
 import pwn
 
-def check_gid_prefix(gid,prefix):
+def check_group_prefix(group,prefix):
     return True
 def format_check(pack,p_from):      #p_from:1->auth,2->user
     if p_from==1 and pack.get('token') and pack.get('token'):
         return True
-    elif p_from==2 and pack.get('role') and pack.get('token') and pack.get('gid') and pack.get('prefix') and pack.get('action'):
+    elif p_from==2 and pack.get('role') and pack.get('token') and pack.get('group') and pack.get('prefix') and pack.get('action'):
         return True
     return False
 def start_Authenticator(host, port):
@@ -20,19 +20,20 @@ def start_Authenticator(host, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # require a certificate from the server
     s = ssl.wrap_socket(s,
-                    keyfile="../certs/authenticator.key",
-                    certfile="../certs/authenticator.crt",
+                    keyfile="../certs/server-client.key",
+                    certfile="../certs/server-client.crt",
                     ca_certs="../certs/ca.crt",
                     cert_reqs=ssl.CERT_REQUIRED)
-    s.bind((host,9299))
+    # s.bind((host,9299))
     s.connect((host,port))
     s.setblocking(False)
-    data=s.recv() 
-    print(data.decode())   
+    # data=s.recv() 
+    # print(data.decode())   
 
 
     return s
 def reconnect_Auth(inputs,outputs,A_HOST,A_PORT,authenticator):
+    print('reconnect auth')
     inputs.remove(authenticator)
     outputs.remove(authenticator)
     authenticator=start_Authenticator(A_HOST,A_PORT)
@@ -76,12 +77,16 @@ def start_server(host,port,a_host,a_port):
                 inputs.append(connection)
                 outputs.append(connection)
             elif s is authenticator:     #authenticator
-                data = s.recv(1024)
+                try:
+                    data = s.recv(1024)
+                except ssl.SSLWantReadError:
+                    continue
                 if not data:
                     #disconnect, reset authenticator
                     authenticator.close()
                     inputs,outputs,authenticator=reconnect_Auth(inputs,outputs,A_HOST,A_PORT,authenticator)
                 else:
+                    print(f"{s.getpeername()} recv auth: {data}")
                     pack=json.loads(data.decode())
                     if(format_check(pack,1)):
                     #read something from auth
@@ -97,13 +102,14 @@ def start_server(host,port,a_host,a_port):
                     else:
                         authenticator.close()
                         inputs,outputs,authenticator=reconnect_Auth(inputs,outputs,A_HOST,A_PORT,authenticator)
-            else:   
+            else:
                 data = s.recv(1024)
                 if data:
+                    print(f"{s.getpeername()} recv user: {data}")
                     #read user's data
                     pack=json.loads(data.decode())
                     if(format_check(pack,2)):
-                        if(pack['action']=='request' and check_gid_prefix(pack['gid'],pack['prefix'])):
+                        if(pack['action']=='request' and check_group_prefix(pack['group'],pack['prefix'])):
                             token_user_dict[pack['token']]=s
                             user_token_dict[s]=pack['token']
                             pack['role']='server'
@@ -113,8 +119,8 @@ def start_server(host,port,a_host,a_port):
                             if s not in outputs:
                                 outputs.append(s)
                         else:
-                            #wrong action/gid/prefix
-                            reject={'role':'server','accept':'False','msg':'Wrong action/gid/prefix'}
+                            #wrong action/group/prefix
+                            reject={'role':'server','accept':'False','msg':'Wrong action/group/prefix'}
                             rej=json.dumps(reject)
                             arr_w[s]=rej.encode()
                     else:
@@ -123,6 +129,7 @@ def start_server(host,port,a_host,a_port):
                         rej=json.dumps(reject)
                         arr_w[s]=rej.encode()
                 else:
+                    print(f'disconnect, remove user {user_token_dict[s]}')
                     #disconnect,remove user
                     if s in user_token_dict:
                         if user_token_dict[s] in token_user_dict:
@@ -135,10 +142,12 @@ def start_server(host,port,a_host,a_port):
         for w in writable:
             if w is authenticator:
                 for aw in authenticator_w:
+                    print(f'{authenticator.getpeername()} send auth: {aw}')
                     authenticator.send(aw)
                     authenticator_w.remove(aw)
             else:
                 if w in arr_w:
+                    print(f'{w.getpeername()} send user: {arr_w[w]}')
                     w.send(arr_w[w])
                     del arr_w[w]
                     if w in user_token_dict:
