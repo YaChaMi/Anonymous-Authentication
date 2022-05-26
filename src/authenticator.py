@@ -8,6 +8,7 @@ from hashlib import sha3_256
 from Crypto.Cipher import PKCS1_v1_5
 from Crypto.PublicKey import RSA
 import key_database
+import sys
 
 # Threshold of Time (second) and number
 class Threshold:
@@ -52,7 +53,7 @@ def challenge_generation(m,group,prefix):
     for element in pk_list:
         uid, pk = element['userid'], RSA.import_key(element['pubkey']) 
         rc = random.getrandbits(32)
-        p = json.dumps({'m': m, 'rc': rc}).encode(encoding="utf-8")
+        p = json.dumps({'m': m + uid if sys.argv[1:] == ['--cheating'] else m, 'rc': rc}).encode(encoding="utf-8")
         random.seed(rc)
         c = PKCS1_v1_5.new(pk.publickey(), randfunc=random.randbytes).encrypt(p)
         chal_list.append({'userid': uid, 'ciphertext': c.hex(), 'random_coin': rc})

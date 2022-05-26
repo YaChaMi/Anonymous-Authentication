@@ -39,7 +39,7 @@ def main():
         open(PRIV_KEY_DIR + "/user" + str(userid) + ".pem", "rb").read()
     )
 
-    pwn.context(log_level="debug")
+    # pwn.context(log_level="debug")
 
     # connect to server
     sock_svr = pwn.remote(SERVER_HOST, SERVER_PORT, ssl=True)
@@ -95,6 +95,7 @@ def main():
 
     # plain: "{'m': m, 'rc': rci}"
     challenges = resp["challenges"]
+    print("received challenges (uid):", [x["userid"] for x in challenges])
     answer = None
     for chal in challenges:
         if chal["userid"] == userid:
@@ -106,15 +107,11 @@ def main():
                 .decode()
             )["m"]
             assert isinstance(answer, int)
-
-            sock_auth.send(json.dumps({"role": "user", "challenge": answer}).encode())
-
             break
     assert answer
 
     if args.verify:
         # verify if authenticator is cheating
-        # TODO: not correctly verified, figure it out
         pkmap = {}
         for pk in key_database.get_pubkeys(gid, prefix):
             pkmap[pk["userid"]] = RSA.import_key(pk["pubkey"])
@@ -126,7 +123,7 @@ def main():
                 cheating = True
                 break
 
-            random.seed(chal['random_coin'])
+            random.seed(chal["random_coin"])
             expected_ciphertext = (
                 PKCS1_v1_5.new(pk, randfunc=random.randbytes)
                 .encrypt(json.dumps({"m": answer, "rc": chal["random_coin"]}).encode())
@@ -143,8 +140,10 @@ def main():
             sock_auth.close()
             exit(1)
 
+    sock_auth.send(json.dumps({"role": "user", "challenge": answer}).encode())
+
     # resp: {‘role’: ‘server’, ‘accept’: True/False}
-    resp = sock_svr.recvuntil("}")
+    resp = sock_svr.recvuntil(b"}")
     resp = json.loads(resp.decode())
     if resp["accept"]:
         print("Authentication succeeded. Logging in...")
